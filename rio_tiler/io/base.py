@@ -474,8 +474,12 @@ class MultiBaseReader(SpatialMixin, metaclass=abc.ABCMeta):
             idx = asset_indexes.get(asset) or kwargs.pop("indexes", None)  # type: ignore
 
             asset_meta = self._get_asset_info(asset)
+            print("##################### ASSET ENV ##################################")
+            print(f"{asset_meta.get('env', {})}")
             url = asset_meta["url"]
-            with self.ctx(**asset_meta.get("env", {})):
+            with self.ctx(**asset_meta.get("env", {})) as rioEnv:
+                print("##################### ENV OPTIONS ##################################")
+                print(rioEnv.options)
                 with self.reader(url, tms=self.tms, **self.reader_options) as src:  # type: ignore
                     data = src.tile(*args, indexes=idx, **kwargs)
                     if asset_as_band:
